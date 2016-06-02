@@ -118,12 +118,16 @@ exports.create = function(req, res, next) {
     var login     = req.body.login;
     var password  = req.body.password;
 
+
     authenticate(login, password)
         .then(function(user) {
             if (user) {
+                var logged  = Date.now()+120000;
+
     	        // Crear req.session.user y guardar campos id y username
     	        // La sesión se define por la existencia de: req.session.user
-    	        req.session.user = {id:user.id, username:user.username, isAdmin:user.isAdmin};
+    	        req.session.user = {id:user.id, username:user.username, loggedUntil:logged,isAdmin:user.isAdmin};
+                res.send(req.session.user.loggedUnti);
 
                 res.redirect(redir); // redirección a redir
             } else {
@@ -136,6 +140,24 @@ exports.create = function(req, res, next) {
             next(error);        
     });
 };
+
+exports.valid_time = function(req,res,next){
+    if(req.session.user){
+        var actual= Date.now();
+        if(req.session.user.loggedUntil>actual){
+            loggedUntil=actual+120000;
+            next();
+        }
+        else {
+            delete req.session.user;
+            res.redirect("/session");
+            
+        }
+    }
+    else{
+        next();
+    }
+}
 
 
 // DELETE /session   -- Destruir sesion 

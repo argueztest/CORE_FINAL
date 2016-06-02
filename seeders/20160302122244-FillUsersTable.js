@@ -15,11 +15,13 @@ module.exports = {
          { username: 'admin', 
            password: encryptPassword('1234', 'aaaa'),
            salt:     'aaaa',
+           loggedUntil: new Date(),
            isAdmin: true,
            createdAt: new Date(), updatedAt: new Date() },
          { username: 'pepe',  
            password: encryptPassword('5678', 'bbbb'),
            salt:     'bbbb',
+           loggedUntil: new Date(),
            createdAt: new Date(), updatedAt: new Date() }
         ]);
   },
