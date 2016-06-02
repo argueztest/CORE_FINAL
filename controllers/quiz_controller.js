@@ -36,8 +36,27 @@ exports.ownershipRequired = function(req, res, next){
 // GET /quizzes
 exports.index = function(req, res, next) {
 			var search=req.query.search;
+			var format=req.params.format || "";
 
-	
+		if(format=="json"){
+				
+			models.Quiz.findAll()
+				.then(function(quizzes) {
+					var json_aux=[];
+					for (var i in quizzes) {
+							
+						json_aux[i]={"id" : quizzes[i].id,"question" : quizzes[i].question, "answer" : quizzes[i].answer};					
+					}
+
+					res.json(json_aux);
+
+				})
+				.catch(function(error) {
+					next(error);
+				});		
+		}
+
+	else{
 
 if(!search){
 	models.Quiz.findAll()
@@ -59,6 +78,7 @@ models.Quiz.findAll({where: {question: {$like: search_aux}}})
 			next(error);
 		});
 	}
+}
 };
 
 
@@ -66,6 +86,14 @@ models.Quiz.findAll({where: {question: {$like: search_aux}}})
 exports.show = function(req, res, next) {
 
 	var answer = req.query.answer || '';
+	var format=req.params.format || "";
+
+
+			if(format=="json"){
+
+				res.json({"id" : req.quiz.id,"question" : req.quiz.question, "answer" : req.quiz.answer});
+
+}
 
 	res.render('quizzes/show', {quiz: req.quiz,
 								answer: answer});

@@ -14,8 +14,7 @@
 <table>
   <% for (var i in quizzes) { %>        
      <tr>
-        <% if (!search) { %>
-	      <% } %>          
+           
       
         <td>
            <a href="/quizzes/<%= quizzes[i].id %>"><%= quizzes[i].question %></a>
